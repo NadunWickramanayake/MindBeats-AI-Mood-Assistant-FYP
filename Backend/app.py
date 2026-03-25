@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 predictor = EmotionPredictor()
-genai.configure(api_key="REMOVED_API_KEY")
+genai.configure(api_key="Add your api key here")
 
 # updated gemini model gemini-1.5-flash to gemini-2.5-flash-lite due to unsupprted issue in 2026
 
