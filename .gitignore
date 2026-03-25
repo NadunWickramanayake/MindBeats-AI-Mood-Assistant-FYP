@@ -16,3 +16,7 @@ authcheck.json
 
 #Node modules
 node_modules/
+
+**/._.DS_Store
+**/..DS_Store
+.DS_Store
