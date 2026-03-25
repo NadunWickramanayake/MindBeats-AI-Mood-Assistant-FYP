@@ -40,6 +40,7 @@ Create a .env file in the Backend folder and add your API key:
 
 Plaintext
 GEMINI_API_KEY=your_actual_key_here
+
 3. Frontend Setup
 Navigate to the frontend directory:
 
