@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+
+# Secrets
+.env
+credentials.json
+authcheck.json
+
+# IDE and OS files
+.idea/
+.DS_Store
+*.iml
+.ipynb_checkpoints/
+
+#Node modules
+node_modules/
