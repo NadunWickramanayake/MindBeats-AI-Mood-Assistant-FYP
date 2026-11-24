@@ -33,9 +33,8 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="nav-auth">
-        <Link to="/signin" className="auth-link">Sign In</Link>
-      </div>
+      {/* Empty spacer keeps the links centered. Sign In is planned as a future update. */}
+      <div className="nav-auth"></div>
     </nav>
   );
 };

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../../config';
 import './Chatbot.css';
 
 const Chatbot = () => {
@@ -10,6 +11,7 @@ const Chatbot = () => {
   const [step, setStep] = useState(0);
   const [emotions, setEmotions] = useState([]);
   const [chatEnded, setChatEnded] = useState(false);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
@@ -32,13 +34,17 @@ const Chatbot = () => {
   };
 
   const handleSendMessage = async () => {
-    if (chatEnded || !inputText.trim() || step >= 7) return;
+    if (chatEnded || loading || !inputText.trim() || step >= 7) return;
 
     const userMessage = { text: inputText, isBot: false };
+    const textToSend = inputText;
     setMessages(prev => [...prev, userMessage]);
-    
+    setInputText('');
+    setLoading(true);
+    let updatedEmotions = emotions;
+
     try {
-      const response = await axios.post('http://127.0.0.1:5000/predict', { text: inputText });
+      const response = await axios.post(`${API_URL}/predict`, { text: textToSend });
       const detectedEmotion = response.data.emotion.toLowerCase();
       
       const botMessage = { 
@@ -49,7 +55,8 @@ const Chatbot = () => {
       };
       
       setMessages(prev => [...prev, botMessage]);
-      setEmotions(prev => [...prev, detectedEmotion]);
+      updatedEmotions = [...emotions, detectedEmotion];
+      setEmotions(updatedEmotions);
       setStep(prev => prev + 1);
     } catch (error) {
       setMessages(prev => [...prev, { 
@@ -58,10 +65,10 @@ const Chatbot = () => {
       }]);
     }
 
-    setInputText('');
+    setLoading(false);
 
     if (step === 6) {
-      const finalEmotion = mostFrequentEmotion();
+      const finalEmotion = mostFrequentEmotion(updatedEmotions);
       setTimeout(() => {
         setMessages(prev => [...prev, { 
           text: `Based on our conversation, I detect you're feeling ${finalEmotion}. Let me recommend some music!`,
@@ -73,12 +80,12 @@ const Chatbot = () => {
     }
   };
 
-  const mostFrequentEmotion = () => {
+  const mostFrequentEmotion = (list = emotions) => {
     const counts = {};
     let max = 0;
     let emotion = '';
     
-    for (let e of emotions) {
+    for (let e of list) {
       const lowerE = e.toLowerCase();
       counts[lowerE] = (counts[lowerE] || 0) + 1;
       if (counts[lowerE] > max) {
@@ -136,13 +143,13 @@ const Chatbot = () => {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
               placeholder={chatEnded ? 'Chat ended' : 'Type your response...'}
               disabled={chatEnded}
             />
             <button 
               onClick={handleSendMessage} 
-              disabled={chatEnded || step >= 7}
+              disabled={chatEnded || loading || step >= 7}
               className="send-button"
             >
               {chatEnded ? '✓' : '→'}

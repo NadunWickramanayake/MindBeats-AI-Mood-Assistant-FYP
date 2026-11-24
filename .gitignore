@@ -1,22 +1,20 @@
-# Dependencies
-node_modules/
-venv/
-__pycache__/
-
-# Secrets
+# Secrets 
 .env
+.env.*
+!.env.example
 credentials.json
 authcheck.json
 
+# Dependencies / build output
+node_modules/
+venv/
+__pycache__/
+*.pyc
+build/
+
 # IDE and OS files
 .idea/
+.vscode/
 .DS_Store
 *.iml
 .ipynb_checkpoints/
-
-#Node modules
-node_modules/
-
-**/._.DS_Store
-**/..DS_Store
-.DS_Store
