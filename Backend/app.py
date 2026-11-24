@@ -1,8 +1,6 @@
 import os
 import logging
 
-# Quieter TensorFlow logs (must be set before TF is imported)
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -13,7 +11,7 @@ try:  # optional: load Backend/.env when running locally
 except ImportError:
     pass
 
-from models.emotion_predictor import EmotionPredictor
+from models.light_predictor import EmotionPredictor  # NumPy-only (no TensorFlow)
 import requests
 
 logging.basicConfig(level=logging.INFO)
@@ -28,7 +26,7 @@ CORS(app, origins=allowed)
 
 MAX_TEXT_LEN = 1000
 
-# Load the model once at startup
+# Load the weights once at startup
 predictor = EmotionPredictor()
 
 # Gemini is optional: if the key is missing or the call fails, we fall back to a canned question.

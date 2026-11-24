@@ -1,0 +1,4 @@
+# Only needed on YOUR computer to run scripts/export_lightweight.py (Python 3.9-3.12)
+-r requirements.txt
+tensorflow==2.18.0
+scikit-learn==1.5.1
